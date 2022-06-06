@@ -196,6 +196,7 @@ const Review = (props) => {
 
   // Set up state updating
   const changeMovie = (event) => { setSelectedMovie(event.target.value) }
+  const changeTitle = (event) => { setEnteredTitle(event.target.value) }
 
   // Submit button press
   const submit = (event) => {
@@ -223,7 +224,8 @@ const Review = (props) => {
   }
 
   const validateReviewTitle = () => {
-    //Check if movie title empty
+    setEnteredTitle()
+    //Check if review title empty
     return (enteredTitle) ? errorReviewTitle(true) : errorReviewTitle(false)
   }
 
@@ -253,6 +255,7 @@ const Review = (props) => {
         errorState={movieError}
       />
       <ReviewTitle
+        onChange={changeTitle}
         errorState={titleError}
       />
       <ReviewBody/>
@@ -286,13 +289,15 @@ const MovieSelection = ({ movie, onChange, errorState }) => {
   )
 }
 
-//TODO Implement Error Message
-const ReviewTitle = ({errorState}) => {
+
+const ReviewTitle = ({onChange, errorState}) => {
   return (
     <Grid item>
       <TextField 
-        error={errorState} 
+        id='review-title-textfield'
         label='Review Title'
+        onChange={onChange}
+        error={errorState} 
         helperText={errorState ? 'Please enter your review title' : ''}
       />
     </Grid>
