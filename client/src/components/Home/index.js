@@ -207,7 +207,7 @@ const Review = ({classes}) => {
   const changeMovie = (event) => { setSelectedMovie(event.target.value) }
   const changeTitle = (event) => { setEnteredTitle(event.target.value) }
   const changeBody = (event) => { setEnteredReview(event.target.value) }
-  const changeRating = (event) => { setSelectedRating(Number(event.target.value) }
+  const changeRating = (event) => { setSelectedRating(Number(event.target.value)) }
 
   // Submit button press
   const submit = (event) => { //TODO Add submission message
