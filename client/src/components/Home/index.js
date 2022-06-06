@@ -1,9 +1,11 @@
 import React, { Component, useState } from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { bool } from 'prop-types';
 import { MuiThemeProvider, createTheme, withStyles } from "@material-ui/core/styles";
 import { 
+  Button,
   CssBaseline, 
   FormControl, 
+  FormHelperText, 
   Grid, 
   InputLabel, 
   MenuItem, 
@@ -127,7 +129,7 @@ class Home extends Component {
         container
         spacing={0}
         direction="column"
-        justify="flex-start"
+        justifyContent="flex-start"
         alignItems="flex-start"
         style={{ minHeight: '100vh' }}
         className={classes.mainMessageContainer}
@@ -137,7 +139,7 @@ class Home extends Component {
           <Typography
             variant={"h3"}
             className={classes.mainMessage}
-            align="flex-start"
+            align="left"
           >
             {this.state.mode === 0 ? (
               <React.Fragment>
@@ -179,54 +181,97 @@ Home.propTypes = {
 const Review = (props) => {
 
   // Set up states
-  const [selectedMovie, setSelectedMovie] = useState("")
-  const [enteredTitle, setEnteredTitle] = useState("")
-  const [enteredReview, setEnteredReview] = useState("")
+    // Movie States
+  const [selectedMovie, setSelectedMovie] = useState('')
+  const [movieError, setMovieError] = useState(false)
+    // Title States
+  const [enteredTitle, setEnteredTitle] = useState('')
+  const [titleError, setTitleError] = useState(false)
+    // Review Body states
+  const [enteredReview, setEnteredReview] = useState('')
+  const [reviewError, setReviewError] = useState(false)
+    // Rating states
   const [selectedRating, setSelectedRating] = useState(0)
+  const [ratingError, setRatingError] = useState(false)
 
   // Set up state updating
   const changeMovie = (event) => { setSelectedMovie(event.target.value) }
 
   // Submit button press
-  const submit = (event) => { setSelectedMovie(event.target.value) }
+  const submit = (event) => {
+    (validateAll())
+  }
 
   // Validation
+
   const validateAll = () => {
     // Validation clauses
-    return true //TODO && validation1 && Validation2...
+    // Call all clauses
+    let bool = validateMovieTitle()
+    bool =  validateReviewTitle() && bool
+    return bool
+  }
+
+  const validateMovieTitle = () => {
+    //Check if movie title empty
+    return (selectedMovie) ? errorMovieTitle(true) : errorMovieTitle(false)
+  }
+
+  const errorMovieTitle = (bool) => {
+    setMovieError(!bool)
+    return bool
+  }
+
+  const validateReviewTitle = () => {
+    //Check if movie title empty
+    return (enteredTitle) ? errorReviewTitle(true) : errorReviewTitle(false)
+  }
+
+  const errorReviewTitle = (bool) => {
+    setTitleError(!bool)
+    return bool
   }
 
   return (
     <Grid 
-    item
-    container
-    spacing={0}
-    direction="column"
-    justify="flex-start"
-    alignItems="flex-start"
+      item
+      container
+      spacing={0}
+      direction="column"
+      justifyContent="flex-start"
+      alignItems="flex-start"
     >
       <Typography
         variant={"h3"}
-        align="flex-start"
+        align="left"
       >
         Review a Movie
       </Typography>
-      <MovieSelection movie={selectedMovie} onChange={changeMovie}/>
-      <ReviewTitle/>
+      <MovieSelection 
+        movie={selectedMovie} 
+        onChange={changeMovie} 
+        errorState={movieError}
+      />
+      <ReviewTitle
+        errorState={titleError}
+      />
       <ReviewBody/>
       <ReviewRating/>
+      <Button onClick={submit}>
+        Submit
+      </Button>
     </Grid>
   )
 }
 
 // TODO Styling
-const MovieSelection = ({ movie, onChange }) => {
+const MovieSelection = ({ movie, onChange, errorState }) => {
   return (
-    <FormControl>
-      <InputLabel id="demo-simple-select-label">Movie Title</InputLabel>
+    <FormControl error={errorState}>
+      <InputLabel id="movie-title-label">Movie Title</InputLabel>
       <Select
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
+        labelid="movie-title-label"
+        id="movie-title-input"
         value={movie}
         onChange={onChange}
       >
@@ -236,24 +281,32 @@ const MovieSelection = ({ movie, onChange }) => {
         <MenuItem value={"Shrek"}>Shrek</MenuItem>
         <MenuItem value={"The Minions"}>The Minions</MenuItem>
       </Select>
+      <FormHelperText>{errorState ? 'Please select a movie title' : ''}</FormHelperText>
     </FormControl>
   )
 }
 
-// Placeholders
-const ReviewTitle = () => {
+//TODO Implement Error Message
+const ReviewTitle = ({errorState}) => {
   return (
-    <div>ReviewTitle</div>
+    <Grid item>
+      <TextField 
+        error={errorState} 
+        label='Review Title'
+        helperText={errorState ? 'Please enter your review title' : ''}
+      />
+    </Grid>
   )
 }
 
-const ReviewBody = () => {
+// Placeholders
+const ReviewBody = ({errorState}) => {
   return (
     <div>ReviewBody</div>
   )
 }
 
-const ReviewRating = () => {
+const ReviewRating = ({errorState}) => {
   return (
     <div>ReviewRating</div>
   )
