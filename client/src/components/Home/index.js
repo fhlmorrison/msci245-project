@@ -1,11 +1,17 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import CssBaseline from "@material-ui/core/CssBaseline";
-import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
+import { MuiThemeProvider, createTheme, withStyles } from "@material-ui/core/styles";
+import { 
+  CssBaseline, 
+  FormControl, 
+  Grid, 
+  InputLabel, 
+  MenuItem, 
+  Paper, 
+  Select, 
+  TextField, 
+  Typography
+} from '@material-ui/core';
 
 
 //Dev mode
@@ -142,8 +148,8 @@ class Home extends Component {
                 Welcome back!
               </React.Fragment>
             )}
+            <Review/>
           </Typography>
-
         </Grid>
       </Grid>
     )
@@ -168,5 +174,68 @@ class Home extends Component {
 Home.propTypes = {
   classes: PropTypes.object.isRequired
 };
+
+
+const Review = (props) => {
+
+  // Set up states
+  const [selectedMovie, setSelectedMovie] = useState("")
+  const [enteredTitle, setEnteredTitle] = useState("")
+  const [enteredReview, setEnteredReview] = useState("")
+  const [selectedRating, setSelectedRating] = useState(0)
+
+  // Set up state updating
+  const changeMovie = (event) => { setSelectedMovie(event.target.value) }
+
+  // Submit button press
+  const submit = (event) => { setSelectedMovie(event.target.value) }
+
+  // Validation
+  const validateAll = () => {
+    // Validation clauses
+    return true //TODO && validation1 && Validation2...
+  }
+
+  return (
+    <Grid 
+    item
+    container
+    spacing={0}
+    direction="column"
+    justify="flex-start"
+    alignItems="flex-start"
+    >
+      <Typography
+        variant={"h3"}
+        align="flex-start"
+      >
+        Review a Movie
+      </Typography>
+      <MovieSelection movie={selectedMovie} onChange={changeMovie}/>
+    </Grid>
+  )
+}
+
+export const MovieSelection = ({ movie, onChange }) => {
+  return (
+    <FormControl>
+        <InputLabel id="demo-simple-select-label">Movie Title</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={movie}
+          onChange={onChange}
+        >
+          <MenuItem value={"Avatar"}>Avatar</MenuItem>
+          <MenuItem value={"Die Hard"}>Die Hard</MenuItem>
+          <MenuItem value={"Morbius"}>Morbius</MenuItem>
+          <MenuItem value={"Shrek"}>Shrek</MenuItem>
+          <MenuItem value={"The Minions"}>The Minions</MenuItem>
+        </Select>
+      </FormControl>
+  )
+}
+
+
 
 export default withStyles(styles)(Home);
