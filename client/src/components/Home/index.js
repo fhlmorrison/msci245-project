@@ -1,15 +1,19 @@
 import React, { Component, useState } from 'react';
 import PropTypes from 'prop-types';
 import { MuiThemeProvider, createTheme, withStyles } from "@material-ui/core/styles";
-import { 
+import {
   Button,
   CssBaseline, 
   FormControl, 
+  FormControlLabel, 
   FormHelperText, 
+  FormLabel, 
   Grid, 
   InputLabel, 
   MenuItem, 
   Paper, 
+  Radio, 
+  RadioGroup, 
   Select, 
   TextField, 
   Typography
@@ -197,11 +201,13 @@ const Review = ({classes}) => {
   const [selectedRating, setSelectedRating] = useState(0)
   const [ratingError, setRatingError] = useState(false)
 
+  //TODO Maybe make some code async/useEffect for updating error states
+
   // Set up state updating
   const changeMovie = (event) => { setSelectedMovie(event.target.value) }
   const changeTitle = (event) => { setEnteredTitle(event.target.value) }
   const changeBody = (event) => { setEnteredReview(event.target.value) }
-  const changeRating = (event) => { setSelectedRating(event.target.value) }
+  const changeRating = (event) => { setSelectedRating(Number(event.target.value) }
 
   // Submit button press
   const submit = (event) => { //TODO Add submission message
@@ -260,7 +266,7 @@ const Review = ({classes}) => {
     return bool
   }
 
-  return (
+  return ( //TODO 3.h, add instruction labels (maybe base helper text)
     <Grid 
       item
       container
@@ -290,6 +296,7 @@ const Review = ({classes}) => {
         errorState={reviewError}
       />
       <ReviewRating
+        rating={selectedRating}
         onChange={changeRating}
         errorState={ratingError}
       />
@@ -317,7 +324,9 @@ const MovieSelection = ({ movie, onChange, errorState, classes }) => {
         <MenuItem value={"Shrek"}>Shrek</MenuItem>
         <MenuItem value={"The Minions"}>The Minions</MenuItem>
       </Select>
-      <FormHelperText>{errorState ? 'Please select a movie title' : ''}</FormHelperText>
+      <FormHelperText>
+        {errorState ? 'Please select a movie title' : ''}
+      </FormHelperText>
     </FormControl>
   )
 }
@@ -368,13 +377,57 @@ ReviewBody.propTypes = {
   errorState: PropTypes.bool.isRequired
 }
 
-const ReviewRating = ({onChange, errorState}) => {
+//TODO implement rating
+const ReviewRating = ({rating, onChange, errorState}) => {
   return (
-    <div>ReviewRating</div>
+    <FormControl error={errorState}>
+      <FormLabel>Rating</FormLabel>
+      <RadioGroup
+        row
+        value={rating}
+        onChange={onChange}
+      >
+        <FormControlLabel
+          value={1}
+          control={<Radio/>}
+          label={1}
+          labelPlacement='bottom'
+        />
+        <FormControlLabel
+          value={2}
+          control={<Radio/>}
+          label={2}
+          labelPlacement='bottom'
+        />
+        <FormControlLabel
+          value={3}
+          control={<Radio/>}
+          label={3}
+          labelPlacement='bottom'
+        />
+        <FormControlLabel
+          value={4}
+          control={<Radio/>}
+          label={4}
+          labelPlacement='bottom'
+        />
+        <FormControlLabel
+          value={5}
+          control={<Radio/>}
+          label={5}
+          labelPlacement='bottom'
+        />
+      </RadioGroup>
+      <FormHelperText>
+        {errorState ? 'Please enter your rating' : ''}
+      </FormHelperText>
+    </FormControl>
+    
   )
 }
 
 ReviewRating.propTypes = {
+  rating: PropTypes.number.isRequired,
   onChange: PropTypes.func.isRequired,
   errorState: PropTypes.bool.isRequired
 }
