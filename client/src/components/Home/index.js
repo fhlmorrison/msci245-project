@@ -72,6 +72,9 @@ const styles = theme => ({
     maxWidth: 250,
     paddingBottom: theme.spacing(2),
   },
+  formControl: {
+    minWidth: 100,
+  }
 
 });
 
@@ -150,8 +153,8 @@ class Home extends Component {
                 Welcome back!
               </React.Fragment>
             )}
-            <Review/>
           </Typography>
+          <Review classes={classes}/>
         </Grid>
       </Grid>
     )
@@ -178,7 +181,7 @@ Home.propTypes = {
 };
 
 
-const Review = (props) => {
+const Review = ({classes}) => {
 
   // Set up states
     // Movie States
@@ -272,10 +275,11 @@ const Review = (props) => {
       >
         Review a Movie
       </Typography>
-      <MovieSelection 
+      <MovieSelection
         movie={selectedMovie} 
         onChange={changeMovie} 
         errorState={movieError}
+        classes={classes}
       />
       <ReviewTitle
         onChange={changeTitle}
@@ -297,9 +301,9 @@ const Review = (props) => {
 }
 
 // TODO Styling
-const MovieSelection = ({ movie, onChange, errorState }) => {
+const MovieSelection = ({ movie, onChange, errorState, classes }) => {
   return (
-    <FormControl error={errorState}>
+    <FormControl error={errorState} className={classes.formControl}>
       <InputLabel id="movie-title-label">Movie Title</InputLabel>
       <Select
         labelid="movie-title-label"
@@ -351,6 +355,7 @@ const ReviewBody = ({onChange, errorState}) => {
       label="Review Body"
       multiline
       minRows={3}
+      fullWidth
       onChange={onChange}
       error={errorState}
       helperText={errorState ? 'Please enter your review' : ''}
