@@ -197,6 +197,8 @@ const Review = (props) => {
   // Set up state updating
   const changeMovie = (event) => { setSelectedMovie(event.target.value) }
   const changeTitle = (event) => { setEnteredTitle(event.target.value) }
+  const changeBody = (event) => { setEnteredReview(event.target.value) }
+  const changeRating = (event) => { setSelectedRating(event.target.value) }
 
   // Submit button press
   const submit = (event) => { //TODO Add submission message
@@ -210,6 +212,8 @@ const Review = (props) => {
     // Call all clauses
     let bool = validateMovieTitle()
     bool =  validateReviewTitle() && bool
+    bool =  validateReviewBody() && bool
+    bool =  validateRating() && bool
     return bool
   }
 
@@ -224,13 +228,32 @@ const Review = (props) => {
   }
 
   const validateReviewTitle = () => {
-    setEnteredTitle()
     //Check if review title empty
     return (enteredTitle) ? errorReviewTitle(true) : errorReviewTitle(false)
   }
 
   const errorReviewTitle = (bool) => {
     setTitleError(!bool)
+    return bool
+  }
+
+  const validateReviewBody = () => {
+    //Check if review title empty
+    return (enteredReview) ? errorReviewBody(true) : errorReviewBody(false)
+  }
+
+  const errorReviewBody = (bool) => {
+    setReviewError(!bool)
+    return bool
+  }
+
+  const validateRating = () => {
+    //Check if review title empty
+    return (selectedRating) ? errorRating(true) : errorRating(false)
+  }
+
+  const errorRating = (bool) => {
+    setRatingError(!bool)
     return bool
   }
 
@@ -258,8 +281,14 @@ const Review = (props) => {
         onChange={changeTitle}
         errorState={titleError}
       />
-      <ReviewBody/>
-      <ReviewRating/>
+      <ReviewBody
+        onChange={changeBody}
+        errorState={reviewError}
+      />
+      <ReviewRating
+        onChange={changeRating}
+        errorState={ratingError}
+      />
       <Button onClick={submit}>
         Submit
       </Button>
@@ -318,7 +347,14 @@ ReviewTitle.propTypes = {
 // Placeholders
 const ReviewBody = ({onChange, errorState}) => {
   return (
-    <div>ReviewBody</div>
+    <TextField
+      label="Review Body"
+      multiline
+      minRows={3}
+      onChange={onChange}
+      error={errorState}
+      helperText={errorState ? 'Please enter your review' : ''}
+    />
   )
 }
 
