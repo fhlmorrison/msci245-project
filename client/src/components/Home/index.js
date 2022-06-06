@@ -212,30 +212,51 @@ const Review = (props) => {
         Review a Movie
       </Typography>
       <MovieSelection movie={selectedMovie} onChange={changeMovie}/>
+      <ReviewTitle/>
+      <ReviewBody/>
+      <ReviewRating/>
     </Grid>
   )
 }
 
-export const MovieSelection = ({ movie, onChange }) => {
+// TODO Styling
+const MovieSelection = ({ movie, onChange }) => {
   return (
     <FormControl>
-        <InputLabel id="demo-simple-select-label">Movie Title</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={movie}
-          onChange={onChange}
-        >
-          <MenuItem value={"Avatar"}>Avatar</MenuItem>
-          <MenuItem value={"Die Hard"}>Die Hard</MenuItem>
-          <MenuItem value={"Morbius"}>Morbius</MenuItem>
-          <MenuItem value={"Shrek"}>Shrek</MenuItem>
-          <MenuItem value={"The Minions"}>The Minions</MenuItem>
-        </Select>
-      </FormControl>
+      <InputLabel id="demo-simple-select-label">Movie Title</InputLabel>
+      <Select
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        value={movie}
+        onChange={onChange}
+      >
+        <MenuItem value={"Avatar"}>Avatar</MenuItem>
+        <MenuItem value={"Die Hard"}>Die Hard</MenuItem>
+        <MenuItem value={"Morbius"}>Morbius</MenuItem>
+        <MenuItem value={"Shrek"}>Shrek</MenuItem>
+        <MenuItem value={"The Minions"}>The Minions</MenuItem>
+      </Select>
+    </FormControl>
   )
 }
 
+// Placeholders
+const ReviewTitle = () => {
+  return (
+    <div>ReviewTitle</div>
+  )
+}
 
+const ReviewBody = () => {
+  return (
+    <div>ReviewBody</div>
+  )
+}
+
+const ReviewRating = () => {
+  return (
+    <div>ReviewRating</div>
+  )
+}
 
 export default withStyles(styles)(Home);
