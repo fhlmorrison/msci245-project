@@ -266,7 +266,7 @@ const Review = ({classes}) => {
     return bool
   }
 
-  return ( //TODO 3.h, add instruction labels (maybe base helper text)
+  return (
     <Grid 
       item
       container
@@ -325,7 +325,9 @@ const MovieSelection = ({ movie, onChange, errorState, classes }) => {
         <MenuItem value={"The Minions"}>The Minions</MenuItem>
       </Select>
       <FormHelperText>
-        {errorState ? 'Please select a movie title' : ''}
+        {errorState 
+        ? 'Please select a movie title' 
+        : 'Select a movie to review'}
       </FormHelperText>
     </FormControl>
   )
@@ -346,7 +348,9 @@ const ReviewTitle = ({onChange, errorState}) => {
         label='Review Title'
         onChange={onChange}
         error={errorState} 
-        helperText={errorState ? 'Please enter your review title' : ''}
+        helperText={errorState 
+          ? 'Please enter your review title' 
+          : 'Enter a title for your review here'}
       />
     </Grid>
   )
@@ -367,7 +371,9 @@ const ReviewBody = ({onChange, errorState}) => {
       fullWidth
       onChange={onChange}
       error={errorState}
-      helperText={errorState ? 'Please enter your review' : ''}
+      helperText={errorState 
+        ? 'Please enter your review' 
+        : 'Write your review here'}
     />
   )
 }
@@ -419,7 +425,9 @@ const ReviewRating = ({rating, onChange, errorState}) => {
         />
       </RadioGroup>
       <FormHelperText>
-        {errorState ? 'Please enter your rating' : ''}
+        {errorState 
+        ? 'Please enter your rating' 
+        : 'Select a rating for the movie'}
       </FormHelperText>
     </FormControl>
     
