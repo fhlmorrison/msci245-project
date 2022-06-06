@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react';
-import PropTypes, { bool } from 'prop-types';
+import PropTypes from 'prop-types';
 import { MuiThemeProvider, createTheme, withStyles } from "@material-ui/core/styles";
 import { 
   Button,
@@ -199,7 +199,7 @@ const Review = (props) => {
   const changeTitle = (event) => { setEnteredTitle(event.target.value) }
 
   // Submit button press
-  const submit = (event) => {
+  const submit = (event) => { //TODO Add submission message
     (validateAll())
   }
 
@@ -289,6 +289,12 @@ const MovieSelection = ({ movie, onChange, errorState }) => {
   )
 }
 
+MovieSelection.propTypes = {
+  movie: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  errorState: PropTypes.bool.isRequired
+}
+
 
 const ReviewTitle = ({onChange, errorState}) => {
   return (
@@ -304,17 +310,32 @@ const ReviewTitle = ({onChange, errorState}) => {
   )
 }
 
+ReviewTitle.propTypes = {
+  onChange: PropTypes.func.isRequired,
+  errorState: PropTypes.bool.isRequired
+}
+
 // Placeholders
-const ReviewBody = ({errorState}) => {
+const ReviewBody = ({onChange, errorState}) => {
   return (
     <div>ReviewBody</div>
   )
 }
 
-const ReviewRating = ({errorState}) => {
+ReviewBody.propTypes = {
+  onChange: PropTypes.func.isRequired,
+  errorState: PropTypes.bool.isRequired
+}
+
+const ReviewRating = ({onChange, errorState}) => {
   return (
     <div>ReviewRating</div>
   )
+}
+
+ReviewRating.propTypes = {
+  onChange: PropTypes.func.isRequired,
+  errorState: PropTypes.bool.isRequired
 }
 
 export default withStyles(styles)(Home);
