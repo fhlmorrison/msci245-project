@@ -326,6 +326,10 @@ const Review = ({classes}) => {
         <Button onClick={submit}>
           Submit
         </Button>
+        <Fade in={submission.current}>
+          <Typography variant="h5">Your review has been received</Typography>
+        </Fade>
+
       </Grid>
       <Grid item xs={1}/>
       <Grid
@@ -336,19 +340,14 @@ const Review = ({classes}) => {
         direction='column'
       >
         {submission.state &&(//TODO
-          <>
-            <Fade in={submission.current}>
-            <Typography variant="h5">Your review has been received</Typography>
-            </Fade>
-            <Fade in={submission.shown}>
-              <>
-                <Typography>Review for the movie {submission.movie}</Typography>
-                <Typography>{submission.title}</Typography>
-                <Typography>{submission.body}</Typography>
-                <Typography>Rating:  {submission.rating}/5</Typography>              
-              </>
-            </Fade>          
-          </>
+          <Fade in={submission.shown}>
+            <>
+              <Typography>Review for the movie {submission.movie}</Typography>
+              <Typography>{submission.title}</Typography>
+              <Typography>{submission.body}</Typography>
+              <Typography>Rating:  {submission.rating}/5</Typography>              
+            </>
+          </Fade>
           )
         }
       </Grid>
