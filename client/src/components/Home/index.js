@@ -1,9 +1,10 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { MuiThemeProvider, createTheme, withStyles } from "@material-ui/core/styles";
 import {
   Button,
   CssBaseline, 
+  Fade, 
   FormControl, 
   FormControlLabel, 
   FormHelperText, 
@@ -49,6 +50,7 @@ const theme = createTheme({
   },
 });
 
+
 const styles = theme => ({
   root: {
     body: {
@@ -62,7 +64,7 @@ const styles = theme => ({
   },
 
   mainMessageContainer: {
-    marginTop: "20vh",
+    paddingTop: "20vh",
     marginLeft: theme.spacing(20),
     [theme.breakpoints.down('xs')]: {
       marginLeft: theme.spacing(4),
@@ -141,25 +143,7 @@ class Home extends Component {
         style={{ minHeight: '100vh' }}
         className={classes.mainMessageContainer}
       >
-        <Grid item>
-
-          <Typography
-            variant={"h3"}
-            className={classes.mainMessage}
-            align="left"
-          >
-            {this.state.mode === 0 ? (
-              <React.Fragment>
-                Welcome to MSci245!
-              </React.Fragment>
-            ) : (
-              <React.Fragment>
-                Welcome back!
-              </React.Fragment>
-            )}
-          </Typography>
-          <Review classes={classes}/>
-        </Grid>
+        <Review classes={classes}/>
       </Grid>
     )
 
@@ -201,17 +185,50 @@ const Review = ({classes}) => {
   const [selectedRating, setSelectedRating] = useState(0)
   const [ratingError, setRatingError] = useState(false)
 
+  const [submission, setSubmission] = useState({
+    shown: false, //Has been submitted
+    current: false, //Submission matches current input
+    movie: '',
+    title: '',
+    body: '',
+    rating: 0,
+  })
+
   //TODO Maybe make some code async/useEffect for updating error states
 
   // Set up state updating
-  const changeMovie = (event) => { setSelectedMovie(event.target.value) }
+  const changeMovie = (event) => { setSelectedMovie(event.target.value); }
   const changeTitle = (event) => { setEnteredTitle(event.target.value) }
   const changeBody = (event) => { setEnteredReview(event.target.value) }
   const changeRating = (event) => { setSelectedRating(Number(event.target.value)) }
 
+  useEffect(() => {
+    detectChange()
+  }, [selectedMovie, enteredTitle, enteredReview, selectedRating])
+  
+
+  const detectChange = () => {
+    !(
+      submission.shown === true &&
+      submission.movie === selectedMovie &&
+      submission.title === enteredTitle &&
+      submission.body === enteredReview &&
+      submission.rating === selectedRating
+    )
+    && setSubmission({...submission, current: false})
+  }
+
   // Submit button press
-  const submit = (event) => { //TODO Add submission message
-    (validateAll())
+  const submit = (event) => {
+    validateAll() && //If valid, set submission to input
+    setSubmission({
+      state: true,
+      current: true,
+      movie: selectedMovie,
+      title: enteredTitle,
+      body: enteredReview,
+      rating: selectedRating,
+    })
   }
 
   // Validation
@@ -267,42 +284,74 @@ const Review = ({classes}) => {
   }
 
   return (
-    <Grid 
-      item
+    <Grid
       container
-      spacing={0}
-      direction="column"
-      justifyContent="flex-start"
-      alignItems="flex-start"
+      direction="row"
     >
-      <Typography
-        variant={"h3"}
-        align="left"
+      <Grid 
+        item
+        container
+        xs={12}
+        md={5}
+        spacing={1}
+        direction="column"
+        justifyContent="flex-start"
+        alignItems="flex-start"
       >
-        Review a Movie
-      </Typography>
-      <MovieSelection
-        movie={selectedMovie} 
-        onChange={changeMovie} 
-        errorState={movieError}
-        classes={classes}
-      />
-      <ReviewTitle
-        onChange={changeTitle}
-        errorState={titleError}
-      />
-      <ReviewBody
-        onChange={changeBody}
-        errorState={reviewError}
-      />
-      <ReviewRating
-        rating={selectedRating}
-        onChange={changeRating}
-        errorState={ratingError}
-      />
-      <Button onClick={submit}>
-        Submit
-      </Button>
+        <Typography
+          variant={"h3"}
+          align="left"
+        >
+          Review a Movie
+        </Typography>
+        <MovieSelection
+          movie={selectedMovie} 
+          onChange={changeMovie} 
+          errorState={movieError}
+          classes={classes}
+        />
+        <ReviewTitle
+          onChange={changeTitle}
+          errorState={titleError}
+        />
+        <ReviewBody
+          onChange={changeBody}
+          errorState={reviewError}
+        />
+        <ReviewRating
+          rating={selectedRating}
+          onChange={changeRating}
+          errorState={ratingError}
+        />
+        <Button onClick={submit}>
+          Submit
+        </Button>
+      </Grid>
+      <Grid item xs={1}/>
+      <Grid
+        item
+        container
+        xs={12}
+        md={5}
+        direction='column'
+      >
+        {submission.state &&(//TODO
+          <>
+            <Fade in={submission.current}>
+            <Typography variant="h5">Your review has been received</Typography>
+            </Fade>
+            <Fade in={submission.shown}>
+              <>
+                <Typography>Review for the movie {submission.movie}</Typography>
+                <Typography>{submission.title}</Typography>
+                <Typography>{submission.body}</Typography>
+                <Typography>Rating:  {submission.rating}/5</Typography>              
+              </>
+            </Fade>          
+          </>
+          )
+        }
+      </Grid>
     </Grid>
   )
 }
