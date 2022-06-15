@@ -327,7 +327,7 @@ const Review = ({classes}) => {
           Submit
         </Button>
         <Fade in={submission.current}>
-          <Typography variant="h5">Your review has been received</Typography>
+          <Typography variant="h5">Your review has been received!</Typography>
         </Fade>
 
       </Grid>
