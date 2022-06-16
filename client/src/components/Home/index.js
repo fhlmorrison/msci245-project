@@ -194,8 +194,6 @@ const Review = ({classes}) => {
     rating: 0,
   })
 
-  //TODO Maybe make some code async/useEffect for updating error states
-
   // Set up state updating
   const changeMovie = (event) => { setSelectedMovie(event.target.value); }
   const changeTitle = (event) => { setEnteredTitle(event.target.value) }
@@ -339,7 +337,7 @@ const Review = ({classes}) => {
         md={4}
         direction='column'
       >
-        {submission.state &&(//TODO
+        {submission.state &&(//TODO Style this better
           <Fade in={submission.shown}>
             <>
               <Typography variant="h4">{submission.title}</Typography>
@@ -355,7 +353,6 @@ const Review = ({classes}) => {
   )
 }
 
-// TODO Styling
 const MovieSelection = ({ movie, onChange, errorState, classes }) => {
   return (
     <FormControl error={errorState} className={classes.formControl}>
@@ -430,7 +427,6 @@ ReviewBody.propTypes = {
   errorState: PropTypes.bool.isRequired
 }
 
-//TODO implement rating
 const ReviewRating = ({rating, onChange, errorState}) => {
   return (
     <FormControl error={errorState}>
