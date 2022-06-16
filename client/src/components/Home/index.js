@@ -336,15 +336,15 @@ const Review = ({classes}) => {
         item
         container
         xs={12}
-        md={5}
+        md={4}
         direction='column'
       >
         {submission.state &&(//TODO
           <Fade in={submission.shown}>
             <>
-              <Typography>Review for the movie {submission.movie}</Typography>
-              <Typography>{submission.title}</Typography>
-              <Typography>{submission.body}</Typography>
+              <Typography variant="h4">{submission.title}</Typography>
+              <Typography variant="subtitle1" color="textSecondary">Review for the movie {submission.movie}</Typography>
+              <Typography variant="body1">{submission.body}</Typography>
               <Typography>Rating:  {submission.rating}/5</Typography>              
             </>
           </Fade>
@@ -390,17 +390,15 @@ MovieSelection.propTypes = {
 
 const ReviewTitle = ({onChange, errorState}) => {
   return (
-    <Grid item>
-      <TextField 
-        id='review-title-textfield'
-        label='Review Title'
-        onChange={onChange}
-        error={errorState} 
-        helperText={errorState 
-          ? 'Please enter your review title' 
-          : 'Enter a title for your review here'}
+    <TextField 
+      id='review-title-textfield'
+      label='Review Title'
+      onChange={onChange}
+      error={errorState} 
+      helperText={errorState 
+        ? 'Please enter your review title' 
+        : 'Enter a title for your review here'}
       />
-    </Grid>
   )
 }
 
@@ -417,11 +415,12 @@ const ReviewBody = ({onChange, errorState}) => {
       multiline
       minRows={3}
       fullWidth
+      inputProps={{maxLength: 200}}
       onChange={onChange}
       error={errorState}
       helperText={errorState 
         ? 'Please enter your review' 
-        : 'Write your review here'}
+        : 'Write your review here (max 200 characters)'}
     />
   )
 }
