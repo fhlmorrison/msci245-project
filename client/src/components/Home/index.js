@@ -200,11 +200,13 @@ const Review = ({classes}) => {
   const changeBody = (event) => { setEnteredReview(event.target.value) }
   const changeRating = (event) => { setSelectedRating(Number(event.target.value)) }
 
+  // Removes submission message on input change
   useEffect(() => {
     detectChange()
   }, [selectedMovie, enteredTitle, enteredReview, selectedRating])
   
-
+  // Check for differences in input and submission
+  // Remove submission message if different
   const detectChange = () => {
     !(
       submission.shown === true &&
@@ -229,7 +231,7 @@ const Review = ({classes}) => {
     })
   }
 
-  // Validation
+  // Validation and error state setting
 
   const validateAll = () => {
     // Validation clauses
@@ -337,13 +339,13 @@ const Review = ({classes}) => {
         md={4}
         direction='column'
       >
-        {submission.state &&(//TODO Style this better
+        {submission.state &&(// Submission display
           <Fade in={submission.shown}>
             <>
               <Typography variant="h4">{submission.title}</Typography>
               <Typography variant="subtitle1" color="textSecondary">Review for the movie {submission.movie}</Typography>
               <Typography variant="body1">{submission.body}</Typography>
-              <Typography>Rating:  {submission.rating}/5</Typography>              
+              <Typography color='textSecondary'>Rating:  {submission.rating}/5</Typography>              
             </>
           </Fade>
           )
@@ -353,6 +355,7 @@ const Review = ({classes}) => {
   )
 }
 
+// Movie selection drop-down menu
 const MovieSelection = ({ movie, onChange, errorState, classes }) => {
   return (
     <FormControl error={errorState} className={classes.formControl}>
@@ -384,7 +387,7 @@ MovieSelection.propTypes = {
   errorState: PropTypes.bool.isRequired
 }
 
-
+// Review title single-line text-field
 const ReviewTitle = ({onChange, errorState}) => {
   return (
     <TextField 
@@ -404,7 +407,7 @@ ReviewTitle.propTypes = {
   errorState: PropTypes.bool.isRequired
 }
 
-// Placeholders
+// Review body multi-line text-field
 const ReviewBody = ({onChange, errorState}) => {
   return (
     <TextField
@@ -427,6 +430,7 @@ ReviewBody.propTypes = {
   errorState: PropTypes.bool.isRequired
 }
 
+// Review rating radio buttons
 const ReviewRating = ({rating, onChange, errorState}) => {
   return (
     <FormControl error={errorState}>
