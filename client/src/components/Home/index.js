@@ -25,7 +25,7 @@ import {
 //const serverURL = ""; //enable for dev mode
 
 //Deployment mode instructions
-const serverURL = "ec2-18-188-101-79.us-east-2.compute.amazonaws.com:3040"; //enable for deployed mode; Change PORT to the port number given to you;
+const serverURL = "ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3040"; //enable for deployed mode; Change PORT to the port number given to you;
 //To find your port number: 
 //ssh to ov-research-4.uwaterloo.ca and run the following command: 
 //env | grep "PORT"
@@ -193,6 +193,23 @@ const Review = ({classes}) => {
     body: '',
     rating: 0,
   })
+
+  const [movies, setMovies] = useState([])
+
+  const fetchMovies = async () => {
+    // TODO Fetch movie list
+    const host = serverURL + '/api/getMovies'
+    response = fetch(host, {
+      // Request
+    })
+
+    // setMovies(results)
+  }
+
+  useEffect(() => {
+    fetchMovies()  
+  }, [])
+  
 
   // Set up state updating
   const changeMovie = (event) => { setSelectedMovie(event.target.value); }
@@ -366,6 +383,10 @@ const MovieSelection = ({ movie, onChange, errorState, classes }) => {
         value={movie}
         onChange={onChange}
       >
+        {
+        // TODO Populate with list from "movies" state
+        //movies.map((e) => {<MenuItem value={e.name}>{e.name}</MenuItem>})
+        }
         <MenuItem value={"Avatar"}>Avatar</MenuItem>
         <MenuItem value={"Die Hard"}>Die Hard</MenuItem>
         <MenuItem value={"Morbius"}>Morbius</MenuItem>

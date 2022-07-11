@@ -36,6 +36,58 @@ app.post('/api/loadUserSettings', (req, res) => {
 	connection.end();
 });
 
+app.post('/api/getMovies', (req, res) => {
+
+	let connection = mysql.createConnection(config);
+	let userID = req.body.userID;
+	
+	// TODO 6.b.iv
+
+	// `SELECT id, name, year, quality FROM movies`
+	// => `SELECT * FROM movies`
+
+	let sql = `SELECT * FROM movies`;
+	console.log(sql);
+
+	connection.query(sql, (error, results, fields) => {
+		if (error) {
+			return console.error(error.message);
+		}
+
+		//let string = JSON.stringify(results);
+		//let obj = JSON.parse(string);
+		//res.send({ express: string });
+		res.json(results)
+	});
+	connection.end();
+});
+
+app.post('/api/getMovies', (req, res) => {
+
+	let connection = mysql.createConnection(config);
+	let userID = req.body.userID;
+	
+	// TODO 6.c.ii
+
+	// `INSERT INTO table1 (fields) VALUES (values)`
+	// `INSERT INTO table2 (fields) VALUES (values)`
+	// => `SELECT * FROM movies`
+
+	let sql = `SELECT * FROM movies`;
+	console.log(sql);
+
+	connection.query(sql, (error, results, fields) => {
+		if (error) {
+			return console.error(error.message);
+		}
+
+		//let string = JSON.stringify(results);
+		//let obj = JSON.parse(string);
+		//res.send({ express: string });
+		res.json(results)
+	});
+	connection.end();
+});
 
 
 app.listen(port, () => console.log(`Listening on port ${port}`)); //for the dev version
