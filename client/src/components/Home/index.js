@@ -203,7 +203,7 @@ const Review = ({classes}) => {
     // TODO Fetch movie list
     const host = (serverURL || 'http://localhost:5000') + '/api/getMovies'
     const response = await fetch(host, {
-      method: 'GET'
+      method: 'POST'
     })
 
     const results = await response.json()

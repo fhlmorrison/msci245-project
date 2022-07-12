@@ -46,7 +46,7 @@ app.post('/api/loadUserSettings', (req, res) => {
 	connection.end();
 });
 
-app.get('/api/getMovies', (req, res) => {
+app.post('/api/getMovies', (req, res) => {
 
 	console.log('getMovies API request')
 	let connection = mysql.createConnection(config);
