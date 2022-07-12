@@ -22,10 +22,10 @@ import {
 
 
 //Dev mode
-//const serverURL = ""; //enable for dev mode
+const serverURL = ""; //enable for dev mode
 
 //Deployment mode instructions
-const serverURL = "ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3040"; //enable for deployed mode; Change PORT to the port number given to you;
+//const serverURL = "ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3040"; //enable for deployed mode; Change PORT to the port number given to you;
 //To find your port number: 
 //ssh to ov-research-4.uwaterloo.ca and run the following command: 
 //env | grep "PORT"
@@ -143,7 +143,7 @@ class Home extends Component {
         style={{ minHeight: '100vh' }}
         className={classes.mainMessageContainer}
       >
-        <Review classes={classes}/>
+        <Review classes={classes} userID={this.state.userID}/>
       </Grid>
     )
 
@@ -169,7 +169,7 @@ Home.propTypes = {
 };
 
 
-const Review = ({classes}) => {
+const Review = ({classes, userID}) => {
 
   // Set up states
     // Movie States
@@ -188,7 +188,8 @@ const Review = ({classes}) => {
   const [submission, setSubmission] = useState({
     shown: false, //Has been submitted
     current: false, //Submission matches current input
-    movie: '',
+    movieID: null,
+    movie: {},
     title: '',
     body: '',
     rating: 0,
@@ -198,12 +199,48 @@ const Review = ({classes}) => {
 
   const fetchMovies = async () => {
     // TODO Fetch movie list
-    const host = serverURL + '/api/getMovies'
-    response = fetch(host, {
-      // Request
+    const host = (serverURL || 'http://localhost:5000') + '/api/getMovies'
+    const response = await fetch(host, {
+      method: 'GET'
     })
 
-    // setMovies(results)
+    const results = await response.json()
+
+    setMovies( await results)
+  }
+
+  const postReview = async () => {
+
+    console.log(`user: ${userID}`)
+
+    const host = (serverURL || 'http://localhost:5000') + '/api/addReview'
+
+    // Prep data to POST
+    const data = {
+      reviewTitle: enteredTitle,
+      reviewContent: enteredReview,
+      reviewScore: selectedRating,
+      userID: userID,
+      movieID: Number(selectedMovie)
+    }
+    console.log(data)
+
+    // POST data
+    const response = await fetch(host, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+
+    const result = await response.json()
+
+    if (await result.message == 'success') {return true} 
+    
+    console.error(`Server side error: ${result.message}`)
+    return false
+
   }
 
   useEffect(() => {
@@ -216,6 +253,8 @@ const Review = ({classes}) => {
   const changeTitle = (event) => { setEnteredTitle(event.target.value) }
   const changeBody = (event) => { setEnteredReview(event.target.value) }
   const changeRating = (event) => { setSelectedRating(Number(event.target.value)) }
+
+  const findMovie = (id) => movies.find(item => item.id === Number(id))
 
   // Removes submission message on input change
   useEffect(() => {
@@ -236,12 +275,14 @@ const Review = ({classes}) => {
   }
 
   // Submit button press
-  const submit = (event) => {
+  const submit = async (event) => {
     validateAll() && //If valid, set submission to input
+    await postReview() &&
     setSubmission({
       state: true,
       current: true,
-      movie: selectedMovie,
+      movieID: selectedMovie,
+      movie: findMovie(selectedMovie),
       title: enteredTitle,
       body: enteredReview,
       rating: selectedRating,
@@ -326,6 +367,7 @@ const Review = ({classes}) => {
           onChange={changeMovie} 
           errorState={movieError}
           classes={classes}
+          movies={movies}
         />
         <ReviewTitle
           onChange={changeTitle}
@@ -360,7 +402,7 @@ const Review = ({classes}) => {
           <Fade in={submission.shown}>
             <>
               <Typography variant="h4">{submission.title}</Typography>
-              <Typography variant="subtitle1" color="textSecondary">Review for the movie {submission.movie}</Typography>
+              <Typography variant="subtitle1" color="textSecondary">Review for the movie {submission.movie.name} ({submission.movie.year})</Typography>
               <Typography variant="body1">{submission.body}</Typography>
               <Typography color='textSecondary'>Rating:  {submission.rating}/5</Typography>              
             </>
@@ -373,7 +415,7 @@ const Review = ({classes}) => {
 }
 
 // Movie selection drop-down menu
-const MovieSelection = ({ movie, onChange, errorState, classes }) => {
+const MovieSelection = ({ movie, onChange, errorState, classes, movies }) => {
   return (
     <FormControl error={errorState} className={classes.formControl}>
       <InputLabel id="movie-title-label">Movie Title</InputLabel>
@@ -385,13 +427,8 @@ const MovieSelection = ({ movie, onChange, errorState, classes }) => {
       >
         {
         // TODO Populate with list from "movies" state
-        //movies.map((e) => {<MenuItem value={e.name}>{e.name}</MenuItem>})
+        (movies.map((e) => <MenuItem key={e.id} value={String(e.id)}>{e.name} ({e.year})</MenuItem>))
         }
-        <MenuItem value={"Avatar"}>Avatar</MenuItem>
-        <MenuItem value={"Die Hard"}>Die Hard</MenuItem>
-        <MenuItem value={"Morbius"}>Morbius</MenuItem>
-        <MenuItem value={"Shrek"}>Shrek</MenuItem>
-        <MenuItem value={"The Minions"}>The Minions</MenuItem>
       </Select>
       <FormHelperText>
         {errorState 
@@ -414,6 +451,7 @@ const ReviewTitle = ({onChange, errorState}) => {
     <TextField 
       id='review-title-textfield'
       label='Review Title'
+      inputProps={{maxLength: 200}}
       onChange={onChange}
       error={errorState} 
       helperText={errorState 

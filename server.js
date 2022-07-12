@@ -13,6 +13,16 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 app.use(express.static(path.join(__dirname, "client/build")));
 
+app.use(function (req, res, next) {
+	res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+	res.setHeader('Access-Control-Allow-Credentials', true);
+	next();
+});
+
+app.get('/', (req, res) => {res.send('<html>Hello</html>'); console.log('Hello')})
+
 
 app.post('/api/loadUserSettings', (req, res) => {
 
@@ -36,10 +46,10 @@ app.post('/api/loadUserSettings', (req, res) => {
 	connection.end();
 });
 
-app.post('/api/getMovies', (req, res) => {
+app.get('/api/getMovies', (req, res) => {
 
+	console.log('getMovies API request')
 	let connection = mysql.createConnection(config);
-	let userID = req.body.userID;
 	
 	// TODO 6.b.iv
 
@@ -54,37 +64,42 @@ app.post('/api/getMovies', (req, res) => {
 			return console.error(error.message);
 		}
 
-		//let string = JSON.stringify(results);
-		//let obj = JSON.parse(string);
-		//res.send({ express: string });
+		// let string = JSON.stringify(results);
+		// let obj = JSON.parse(string);
+		// res.send({ express: string });
 		res.json(results)
 	});
 	connection.end();
 });
 
-app.post('/api/getMovies', (req, res) => {
+app.post('/api/addReview', (req, res) => {
 
 	let connection = mysql.createConnection(config);
-	let userID = req.body.userID;
+	// Parse request and assign values to list\
+	
+	// [reviewTitle, reviewContent, reviewScore, userID, movieID]
+	let submission = req.body
+	console.log(submission)
+	let data = Object.values(submission)
+	console.log(data)
 	
 	// TODO 6.c.ii
 
 	// `INSERT INTO table1 (fields) VALUES (values)`
-	// `INSERT INTO table2 (fields) VALUES (values)`
-	// => `SELECT * FROM movies`
 
-	let sql = `SELECT * FROM movies`;
+	let sql = `INSERT INTO review (reviewTitle, reviewContent, reviewScore, userID, movieID) VALUES (?, ?, ?, ?, ?)`;
 	console.log(sql);
 
-	connection.query(sql, (error, results, fields) => {
+	connection.query(sql, data, (error, results, fields) => {
 		if (error) {
+			res.send({message: error.message})
 			return console.error(error.message);
 		}
 
 		//let string = JSON.stringify(results);
 		//let obj = JSON.parse(string);
 		//res.send({ express: string });
-		res.json(results)
+		res.send({message: 'success'})
 	});
 	connection.end();
 });
