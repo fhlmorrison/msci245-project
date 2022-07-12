@@ -143,7 +143,7 @@ class Home extends Component {
         style={{ minHeight: '100vh' }}
         className={classes.mainMessageContainer}
       >
-        <Review classes={classes} userID={this.state.userID}/>
+        <Review classes={classes}/>
       </Grid>
     )
 
@@ -169,7 +169,9 @@ Home.propTypes = {
 };
 
 
-const Review = ({classes, userID}) => {
+const Review = ({classes}) => {
+
+  const [userID, setUserID] = useState(1)
 
   // Set up states
     // Movie States
