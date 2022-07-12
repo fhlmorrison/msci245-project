@@ -213,8 +213,6 @@ const Review = ({classes}) => {
 
   const postReview = async () => {
 
-    console.log(`user: ${userID}`)
-
     const host = (serverURL || 'http://localhost:5000') + '/api/addReview'
 
     // Prep data to POST
@@ -225,7 +223,7 @@ const Review = ({classes}) => {
       userID: userID,
       movieID: Number(selectedMovie)
     }
-    console.log(data)
+    // console.log('addReview API POST data: ', data)
 
     // POST data
     const response = await fetch(host, {
