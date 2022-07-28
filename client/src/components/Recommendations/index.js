@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { AppBar, Button, Grid, Paper, Toolbar, Typography, TextField, CssBaseline } from '@material-ui/core'
+import React, { useState, useEffect } from 'react'
+import { AppBar, Button, Grid, Paper, Toolbar, Typography, CssBaseline } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 import { MuiThemeProvider, withStyles } from "@material-ui/core/styles";
 import theme from '../Theme';
@@ -39,27 +39,17 @@ const linkStyle = {
 	cursor: 'pointer'
 }
 
-const Search = ({ classes }) => {
+const Recommendations = ({ classes }) => {
 
-	const [movieTitle, setMovieTitle] = useState('')
-	const [director, setDirector] = useState('')
-	const [actor, setActor] = useState('')
+	const [recommendationResults, setRecommendationResults] = useState([])
+	const [userID, setUserID] = useState(1)
 
-	const [searched, setSearched] = useState(false)
-
-	const [searchResults, setSearchResults] = useState([])
-
-	const changeMovieTitle = (event) => { setMovieTitle(event.target.value); }
-	const changeDirector = (event) => { setDirector(event.target.value); }
-	const changeActor = (event) => { setActor(event.target.value); }
-
-	const submitSearch = async () => {
-		const host = (serverURL || 'http://localhost:5000') + '/api/search'
+	const getRecommendations = async () => {
+		//Fetch
+		const host = (serverURL || 'http://localhost:5000') + '/api/recommendations'
 
 		const data = {
-			title: movieTitle,
-			director: director,
-			actor: actor,
+			userID: userID
 		}
 
 		const response = await fetch(host, {
@@ -71,9 +61,16 @@ const Search = ({ classes }) => {
 		})
 
 		const results = await response.json()
-		setSearchResults(results)
-		setSearched(true)
+		setRecommendationResults(results)
+		console.log(results)
+
 	}
+
+	useEffect(() => {
+		console.log('Loaded')
+		getRecommendations();
+	}, [])
+	
 
 	const navBar = (
 		<AppBar position='static' className={classes.navBar}>
@@ -89,25 +86,26 @@ const Search = ({ classes }) => {
 				</Button>
 				<Button color='inherit'>
 					<Link
+						to={'/search'}
+						style={linkStyle}
+					>
+						<Typography variant='h4'>Search</Typography>
+					</Link>
+				</Button>
+				<Button color='inherit'>
+					<Link
 						to={'/reviews'}
 						style={linkStyle}
 					>
 						<Typography variant='h4'>Reviews</Typography>
 					</Link>
 				</Button>
-				<Button color='inherit'>
-					<Link
-						to={'/recommendations'}
-						style={linkStyle}
-					>
-						<Typography variant='h4'>Recommendations</Typography>
-					</Link>
-				</Button>
 			</Toolbar>
 		</AppBar>
 	)
 
-	const searchForm = (
+
+	const mainContent = (
 		<Grid
 			container
 			direction='column'
@@ -117,45 +115,19 @@ const Search = ({ classes }) => {
 				variant={"h3"}
 				align="left"
 			>
-				Search for Movies
+				Recommendations
 			</Typography>
-			<Grid item>
-				<TextField
-					id='movie-title-textfield'
-					label='Movie Title'
-					inputProps={{ maxLength: 200 }}
-					onChange={changeMovieTitle}
-				/>
-			</Grid>
-			<Grid item>
-				<TextField
-					id='director-textfield'
-					label='Director'
-					inputProps={{ maxLength: 200 }}
-					onChange={changeDirector}
-					helperText={'First_Name Last_Name'}
-				/>
-			</Grid>
-			<Grid item>
-				<TextField
-					id='actor-textfield'
-					label='Actor'
-					inputProps={{ maxLength: 200 }}
-					onChange={changeActor}
-					helperText={'First_Name Last_Name'}
-				/>
-			</Grid>
-			<Grid item>
-				<Button onClick={submitSearch}>
-					SEARCH
-				</Button>
-			</Grid>
-
-			<Typography>{searched && searchResults.length + ' results'}</Typography>
-
+			<Typography variant='body2' color='textSecondary'>
+				This page shows recommendations of movies you haven't reviewed from the same directors of movies you have reviewed.
+			</Typography>
+			{
+				Boolean(recommendationResults[0]) && 
+				(<Typography>Watch more movies from these directors</Typography>)
+			}
+			
 			<Grid item container md={10}>
 				{
-					searchResults.map(e => (
+					recommendationResults.map(e => (
 						<Grid item md={4} key={e.movie_id}>
 							<Paper key={e.movie_id} className={classes.movieResult} style={{ margin: '10px' }}>
 								<Typography variant='h6'>{e.title}</Typography>
@@ -170,7 +142,6 @@ const Search = ({ classes }) => {
 					))
 				}
 			</Grid>
-
 		</Grid>
 	)
 
@@ -182,11 +153,11 @@ const Search = ({ classes }) => {
 					style={{ minHeight: '100vh' }
 					}>
 					{navBar}
-					{searchForm}
+					{mainContent}
 				</Paper>
 			</div>
 		</MuiThemeProvider>
 	)
 }
 
-export default withStyles(styles)(Search)
+export default withStyles(styles)(Recommendations)

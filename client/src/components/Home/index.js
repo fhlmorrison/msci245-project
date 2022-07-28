@@ -3,29 +3,29 @@ import PropTypes from 'prop-types';
 import { MuiThemeProvider, createTheme, withStyles } from "@material-ui/core/styles";
 import {
   Button,
-  CssBaseline, 
-  Fade, 
-  FormControl, 
-  FormControlLabel, 
-  FormHelperText, 
-  FormLabel, 
-  Grid, 
-  InputLabel, 
-  MenuItem, 
-  Paper, 
-  Radio, 
-  RadioGroup, 
-  Select, 
-  TextField, 
+  CssBaseline,
+  Fade,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  FormLabel,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Radio,
+  RadioGroup,
+  Select,
+  TextField,
   Typography
 } from '@material-ui/core';
 
 
 //Dev mode
-//const serverURL = ""; //enable for dev mode
+const serverURL = ""; //enable for dev mode
 
 //Deployment mode instructions
-const serverURL = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3040"; //enable for deployed mode; Change PORT to the port number given to you;
+//const serverURL = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3040"; //enable for deployed mode; Change PORT to the port number given to you;
 //To find your port number: 
 //ssh to ov-research-4.uwaterloo.ca and run the following command: 
 //env | grep "PORT"
@@ -143,7 +143,7 @@ class Home extends Component {
         style={{ minHeight: '100vh' }}
         className={classes.mainMessageContainer}
       >
-        <Review classes={classes}/>
+        <Review classes={classes} />
       </Grid>
     )
 
@@ -169,21 +169,21 @@ Home.propTypes = {
 };
 
 
-const Review = ({classes}) => {
+const Review = ({ classes }) => {
 
   const [userID, setUserID] = useState(1)
 
   // Set up states
-    // Movie States
+  // Movie States
   const [selectedMovie, setSelectedMovie] = useState('')
   const [movieError, setMovieError] = useState(false)
-    // Title States
+  // Title States
   const [enteredTitle, setEnteredTitle] = useState('')
   const [titleError, setTitleError] = useState(false)
-    // Review Body states
+  // Review Body states
   const [enteredReview, setEnteredReview] = useState('')
   const [reviewError, setReviewError] = useState(false)
-    // Rating states
+  // Rating states
   const [selectedRating, setSelectedRating] = useState(0)
   const [ratingError, setRatingError] = useState(false)
 
@@ -208,7 +208,7 @@ const Review = ({classes}) => {
 
     const results = await response.json()
 
-    setMovies( await results)
+    setMovies(await results)
   }
 
   const postReview = async () => {
@@ -236,17 +236,17 @@ const Review = ({classes}) => {
 
     const result = await response.json()
 
-    if (await result.message == 'success') {return true} 
-    
+    if (await result.message === 'success') { return true }
+
     console.error(`Server side error: ${result.message}`)
     return false
 
   }
 
   useEffect(() => {
-    fetchMovies()  
+    fetchMovies()
   }, [])
-  
+
 
   // Set up state updating
   const changeMovie = (event) => { setSelectedMovie(event.target.value); }
@@ -260,7 +260,7 @@ const Review = ({classes}) => {
   useEffect(() => {
     detectChange()
   }, [selectedMovie, enteredTitle, enteredReview, selectedRating])
-  
+
   // Check for differences in input and submission
   // Remove submission message if different
   const detectChange = () => {
@@ -271,22 +271,22 @@ const Review = ({classes}) => {
       submission.body === enteredReview &&
       submission.rating === selectedRating
     )
-    && setSubmission({...submission, current: false})
+      && setSubmission({ ...submission, current: false })
   }
 
   // Submit button press
   const submit = async (event) => {
     validateAll() && //If valid, set submission to input
-    await postReview() &&
-    setSubmission({
-      state: true,
-      current: true,
-      movieID: selectedMovie,
-      movie: findMovie(selectedMovie),
-      title: enteredTitle,
-      body: enteredReview,
-      rating: selectedRating,
-    })
+      await postReview() &&
+      setSubmission({
+        state: true,
+        current: true,
+        movieID: selectedMovie,
+        movie: findMovie(selectedMovie),
+        title: enteredTitle,
+        body: enteredReview,
+        rating: selectedRating,
+      })
   }
 
   // Validation and error state setting
@@ -295,9 +295,9 @@ const Review = ({classes}) => {
     // Validation clauses
     // Call all clauses
     let bool = validateMovieTitle()
-    bool =  validateReviewTitle() && bool
-    bool =  validateReviewBody() && bool
-    bool =  validateRating() && bool
+    bool = validateReviewTitle() && bool
+    bool = validateReviewBody() && bool
+    bool = validateRating() && bool
     return bool
   }
 
@@ -346,7 +346,7 @@ const Review = ({classes}) => {
       container
       direction="row"
     >
-      <Grid 
+      <Grid
         item
         container
         xs={12}
@@ -363,8 +363,8 @@ const Review = ({classes}) => {
           Review a Movie
         </Typography>
         <MovieSelection
-          movie={selectedMovie} 
-          onChange={changeMovie} 
+          movie={selectedMovie}
+          onChange={changeMovie}
           errorState={movieError}
           classes={classes}
           movies={movies}
@@ -390,7 +390,7 @@ const Review = ({classes}) => {
         </Fade>
 
       </Grid>
-      <Grid item xs={1}/>
+      <Grid item xs={1} />
       <Grid
         item
         container
@@ -398,16 +398,16 @@ const Review = ({classes}) => {
         md={4}
         direction='column'
       >
-        {submission.state &&(// Submission display
+        {submission.state && (// Submission display
           <Fade in={submission.shown}>
             <>
               <Typography variant="h4">{submission.title}</Typography>
               <Typography variant="subtitle1" color="textSecondary">Review for the movie {submission.movie.name} ({submission.movie.year})</Typography>
               <Typography variant="body1">{submission.body}</Typography>
-              <Typography color='textSecondary'>Rating:  {submission.rating}/5</Typography>              
+              <Typography color='textSecondary'>Rating:  {submission.rating}/5</Typography>
             </>
           </Fade>
-          )
+        )
         }
       </Grid>
     </Grid>
@@ -426,14 +426,14 @@ const MovieSelection = ({ movie, onChange, errorState, classes, movies }) => {
         onChange={onChange}
       >
         {
-        // TODO Populate with list from "movies" state
-        (movies.map((e) => <MenuItem key={e.id} value={String(e.id)}>{e.name} ({e.year})</MenuItem>))
+          // TODO Populate with list from "movies" state
+          (movies.map((e) => <MenuItem key={e.id} value={String(e.id)}>{e.name} ({e.year})</MenuItem>))
         }
       </Select>
       <FormHelperText>
-        {errorState 
-        ? 'Please select a movie title' 
-        : 'Select a movie to review'}
+        {errorState
+          ? 'Please select a movie title'
+          : 'Select a movie to review'}
       </FormHelperText>
     </FormControl>
   )
@@ -446,18 +446,18 @@ MovieSelection.propTypes = {
 }
 
 // Review title single-line text-field
-const ReviewTitle = ({onChange, errorState}) => {
+const ReviewTitle = ({ onChange, errorState }) => {
   return (
-    <TextField 
+    <TextField
       id='review-title-textfield'
       label='Review Title'
-      inputProps={{maxLength: 200}}
+      inputProps={{ maxLength: 200 }}
       onChange={onChange}
-      error={errorState} 
-      helperText={errorState 
-        ? 'Please enter your review title' 
+      error={errorState}
+      helperText={errorState
+        ? 'Please enter your review title'
         : 'Enter a title for your review here'}
-      />
+    />
   )
 }
 
@@ -467,18 +467,18 @@ ReviewTitle.propTypes = {
 }
 
 // Review body multi-line text-field
-const ReviewBody = ({onChange, errorState}) => {
+const ReviewBody = ({ onChange, errorState }) => {
   return (
     <TextField
       label="Review Body"
       multiline
       minRows={3}
       fullWidth
-      inputProps={{maxLength: 200}}
+      inputProps={{ maxLength: 200 }}
       onChange={onChange}
       error={errorState}
-      helperText={errorState 
-        ? 'Please enter your review' 
+      helperText={errorState
+        ? 'Please enter your review'
         : 'Write your review here (max 200 characters)'}
     />
   )
@@ -490,7 +490,7 @@ ReviewBody.propTypes = {
 }
 
 // Review rating radio buttons
-const ReviewRating = ({rating, onChange, errorState}) => {
+const ReviewRating = ({ rating, onChange, errorState }) => {
   return (
     <FormControl error={errorState}>
       <FormLabel>Rating</FormLabel>
@@ -501,42 +501,42 @@ const ReviewRating = ({rating, onChange, errorState}) => {
       >
         <FormControlLabel
           value={1}
-          control={<Radio/>}
+          control={<Radio />}
           label={1}
           labelPlacement='bottom'
         />
         <FormControlLabel
           value={2}
-          control={<Radio/>}
+          control={<Radio />}
           label={2}
           labelPlacement='bottom'
         />
         <FormControlLabel
           value={3}
-          control={<Radio/>}
+          control={<Radio />}
           label={3}
           labelPlacement='bottom'
         />
         <FormControlLabel
           value={4}
-          control={<Radio/>}
+          control={<Radio />}
           label={4}
           labelPlacement='bottom'
         />
         <FormControlLabel
           value={5}
-          control={<Radio/>}
+          control={<Radio />}
           label={5}
           labelPlacement='bottom'
         />
       </RadioGroup>
       <FormHelperText>
-        {errorState 
-        ? 'Please enter your rating' 
-        : 'Select a rating for the movie'}
+        {errorState
+          ? 'Please enter your rating'
+          : 'Select a rating for the movie'}
       </FormHelperText>
     </FormControl>
-    
+
   )
 }
 

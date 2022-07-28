@@ -5,6 +5,7 @@ import Landing from "../Landing";
 import history from './history';
 import Search from "../Search";
 import Reviews from "../Reviews";
+import Recommendations from "../Recommendations";
 
 export default function PrivateRoute({
   //authenticated,
@@ -14,11 +15,11 @@ export default function PrivateRoute({
 
     <Router history={history}>
       <Switch>
-      <Route path="/" exact component={Landing} />
-      <Route path="/search" exact component={Search} />
-      <Route path="/reviews" exact component={Reviews} />
-      <Route path="/home" exact component={Home} /> {/*Temporary*/}
-      {/*<Route path="/myPage" exact component={myPage} />*/ /*Custom page*/}
+        <Route path="/" exact component={Landing} />
+        <Route path="/search" exact component={Search} />
+        <Route path="/reviews" exact component={Reviews} />
+        <Route path="/home" exact component={Home} /> {/*Temporary*/}
+        <Route path="/recommendations" exact component={Recommendations} />
       </Switch>
     </Router>
   );
