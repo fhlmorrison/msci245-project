@@ -18,7 +18,7 @@ export default function PrivateRoute({
         <Route path="/" exact component={Landing} />
         <Route path="/search" exact component={Search} />
         <Route path="/reviews" exact component={Reviews} />
-        <Route path="/home" exact component={Home} /> {/*Temporary*/}
+        {/* <Route path="/home" exact component={Home} />*/}
         <Route path="/recommendations" exact component={Recommendations} />
       </Switch>
     </Router>
