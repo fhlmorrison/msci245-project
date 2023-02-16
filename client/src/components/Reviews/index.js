@@ -1,6 +1,7 @@
 import React, { Component, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { MuiThemeProvider, createTheme, withStyles } from "@material-ui/core/styles";
+import { Link } from 'react-router-dom'
+import { MuiThemeProvider, withStyles } from "@material-ui/core/styles";
 import {
   Button,
   CssBaseline,
@@ -17,39 +18,21 @@ import {
   RadioGroup,
   Select,
   TextField,
-  Typography
+  Typography,
+  AppBar,
+  Toolbar
 } from '@material-ui/core';
+import theme from '../Theme';
 
 
-//Dev mode
-//const serverURL = ""; //enable for dev mode
+//Dev mode / Deploy mode
+const serverURL = ""; //enable for dev mode
+//const serverURL = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3040";
 
-//Deployment mode instructions
-const serverURL = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3040"; //enable for deployed mode; Change PORT to the port number given to you;
-//To find your port number: 
-//ssh to ov-research-4.uwaterloo.ca and run the following command: 
-//env | grep "PORT"
-//copy the number only and paste it in the serverURL in place of PORT, e.g.: const serverURL = "http://ov-research-4.uwaterloo.ca:3000";
 
 const fetch = require("node-fetch");
 
 const opacityValue = 0.9;
-
-const theme = createTheme({
-  palette: {
-    type: 'dark',
-    background: {
-      default: "#000000"
-    },
-    primary: {
-      main: "#52f1ff",
-    },
-    secondary: {
-      main: "#b552f7",
-    },
-  },
-});
-
 
 const styles = theme => ({
   root: {
@@ -64,7 +47,7 @@ const styles = theme => ({
   },
 
   mainMessageContainer: {
-    paddingTop: "20vh",
+    paddingTop: "15vh",
     marginLeft: theme.spacing(20),
     [theme.breakpoints.down('xs')]: {
       marginLeft: theme.spacing(4),
@@ -84,8 +67,14 @@ const styles = theme => ({
 
 });
 
+const linkStyle = {
+	textDecoration: 'none',
+	color: 'inherit',
+	cursor: 'pointer'
+}
 
-class Home extends Component {
+
+class Reviews extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -140,11 +129,42 @@ class Home extends Component {
         direction="column"
         justifyContent="flex-start"
         alignItems="flex-start"
-        style={{ minHeight: '100vh' }}
         className={classes.mainMessageContainer}
       >
         <Review classes={classes} />
       </Grid>
+    )
+    const navBar = (
+      <AppBar position='static'>
+        <Toolbar>
+          {/*Logo*/}
+          <Button color='inherit'>
+            <Link
+              to={'/'}
+              style={linkStyle}
+            >
+              <Typography variant='h4'>Landing</Typography>
+            </Link>
+          </Button>
+          <Button color='inherit'>
+            <Link
+              to={'/search'}
+              style={linkStyle}
+            /*onClick={()=>history.push('/search')}*/
+            >
+              <Typography variant='h4'>Search</Typography>
+            </Link>
+          </Button>
+          <Button color='inherit'>
+            <Link
+              to={'/recommendations'}
+              style={linkStyle}
+            >
+              <Typography variant='h4'>Recommendations</Typography>
+            </Link>
+          </Button>
+        </Toolbar>
+      </AppBar>
     )
 
 
@@ -153,8 +173,10 @@ class Home extends Component {
         <div className={classes.root}>
           <CssBaseline />
           <Paper
+            style={{ minHeight: '100vh' }}
             className={classes.paper}
           >
+            {navBar}
             {mainMessage}
           </Paper>
 
@@ -164,7 +186,7 @@ class Home extends Component {
   }
 }
 
-Home.propTypes = {
+Reviews.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
@@ -546,4 +568,4 @@ ReviewRating.propTypes = {
   errorState: PropTypes.bool.isRequired
 }
 
-export default withStyles(styles)(Home);
+export default withStyles(styles)(Reviews);

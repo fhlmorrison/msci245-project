@@ -1,0 +1,30 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "192.168.2.38",
+            "port": 3306,
+            "askForPassword": true,
+            "driver": "MySQL",
+            "name": "demodb-Dipsy",
+            "database": "demodb",
+            "username": "fraser"
+        },
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "ec2-18-216-101-119.us-east-2.compute.amazonaws.com",
+            "port": 3306,
+            "askForPassword": true,
+            "driver": "MySQL",
+            "name": "msci245",
+            "username": "f4morris",
+            "database": "f4morris"
+        }
+    ]
+}
