@@ -5,7 +5,7 @@ import { MuiThemeProvider, withStyles } from "@material-ui/core/styles";
 import theme from '../Theme';
 
 //const serverURL = "";
-const serverURL = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3040";
+const serverURL = "http://dev.fmorrison.ca";
 
 const opacityValue = 0.9;
 

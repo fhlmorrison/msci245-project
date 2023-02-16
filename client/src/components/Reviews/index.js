@@ -26,8 +26,8 @@ import theme from '../Theme';
 
 
 //Dev mode / Deploy mode
-const serverURL = ""; //enable for dev mode
-//const serverURL = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3040";
+// const serverURL = ""; //enable for dev mode
+const serverURL = "http://dev.fmorrison.ca";
 
 
 const fetch = require("node-fetch");
